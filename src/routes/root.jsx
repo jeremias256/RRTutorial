@@ -7,8 +7,10 @@ export async function action() {
 	return redirect(`/contacts/${contact.id}/edit`);
 }
 
-export async function loader() {
-	const contacts = await getContacts();
+export async function loader({ request }) {
+	const url = new URL(request.url);
+	const q = url.searchParams.get("q");
+	const contacts = await getContacts(q);
 	return { contacts };
 }
 
@@ -20,7 +22,7 @@ export default function Root() {
 			<div id='sidebar'>
 				<h1>React Router Contacts</h1>
 				<div>
-					<form
+					<Form
 						id='search-form'
 						role='search'>
 						<input
@@ -38,7 +40,7 @@ export default function Root() {
 						<div
 							className='sr-only'
 							aria-live='polite'></div>
-					</form>
+					</Form>
 					<Form method='post'>
 						<button type='submit'>New</button>
 					</Form>
